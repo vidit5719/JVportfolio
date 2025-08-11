@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Pages Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 1rem;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .image-container {
+      max-width: 800px;
+      width: 100%;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>PDF Pages as Images</h1>
+
+  <div id="images-wrapper"></div>
+
+  <script>
+    const imagesWrapper = document.getElementById('images-wrapper');
+
+    for (let i = 0; i < 52; i++) {
+      const pageNum = i.toString().padStart(2, '0');
+      const imgSrc = `output-page-${pageNum}-0.png`;
+
+      const container = document.createElement('div');
+      container.className = 'image-container';
+
+      const img = document.createElement('img');
+      img.src = imgSrc;
+      img.alt = `Page ${i + 1}`;
+      img.loading = 'lazy';
+
+      container.appendChild(img);
+      imagesWrapper.appendChild(container);
+    }
+  </script>
+</body>
+</html>
