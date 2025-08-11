@@ -38,9 +38,10 @@
     const imagesWrapper = document.getElementById('images-wrapper');
 
     for (let i = 0; i < 52; i++) {
-      const pageNum = i.toString().padStart(2, '0');
-      // Adjusted path for GitHub Pages repo
-      const imgSrc = `/JVportfolio/output-page-${pageNum}-0.png`;
+      const pageNum = i.toString().padStart(2, '0'); // zero-padded page number
+      const suffixNum = i.toString();                // suffix matches page number without padding
+
+      const imgSrc = `/JVportfolio/output-page-${pageNum}-${suffixNum}.png`;
 
       const container = document.createElement('div');
       container.className = 'image-container';
@@ -48,7 +49,7 @@
       const img = document.createElement('img');
       img.src = imgSrc;
       img.alt = `Page ${i + 1}`;
-      img.loading = '';
+      img.loading = 'lazy';
 
       container.appendChild(img);
       imagesWrapper.appendChild(container);
@@ -56,3 +57,4 @@
   </script>
 </body>
 </html>
+
