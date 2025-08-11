@@ -42,25 +42,21 @@
         const loadingMessage = document.getElementById('loading-message');
 
         // Total number of pages (adjust this if you have more or fewer pages)
-        const totalPages = 52; // Based on your previous context, assuming 52 pages (0 to 51)
+        const totalPages = 52; // Still assuming 52 pages (from 0 to 51) based on previous context
 
         /**
          * Dynamically loads and displays PDF pages as images.
-         * The image source path is constructed based on the
-         * "output-page-%02d-N.png" pattern provided in the file list.
+         * The image source path is now constructed to explicitly include
+         * the literal '%02d' string, as observed in your provided filenames.
+         * The trailing number is the iteration index 'i'.
          */
         function loadPdfPages() {
             let loadedImagesCount = 0;
 
             for (let i = 0; i < totalPages; i++) {
-                // Ensure pageNum is zero-padded to two digits (e.g., 00, 01, ..., 09, 10)
-                const pageNumZeroPadded = i.toString().padStart(2, '0');
-
-                // Construct the image source path
-                // The pattern observed from your file list is 'output-page-%02d-N.png'
-                // where %02d seems to be a placeholder that becomes the zero-padded number,
-                // and N is the non-padded number.
-                const imgSrc = `output-page-${pageNumZeroPadded}-${i}.png`;
+                // Construct the image source path using the *literal* '%02d'
+                // and the non-padded page number 'i' at the end.
+                const imgSrc = `output-page-%02d-${i}.png`;
 
                 // Create a container div for each image for consistent styling
                 const container = document.createElement('div');
@@ -76,8 +72,8 @@
                 // Add an error handler for images that fail to load
                 img.onerror = () => {
                     console.error(`Failed to load image: ${imgSrc}`);
-                    // You could also replace the image with a placeholder or display an error message
-                    img.src = `https://placehold.co/800x600/FFF/6B7280?text=Page%20${i+1}%20Not%20Found`; // Placeholder on error
+                    // Replace the broken image with a placeholder indicating the page number
+                    img.src = `https://placehold.co/800x600/FFF/6B7280?text=Page%20${i+1}%20Not%20Found`;
                     img.alt = `Page ${i + 1} (Image Not Found)`;
                 };
 
