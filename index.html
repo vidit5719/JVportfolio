@@ -41,13 +41,15 @@
         // Get the loading message element
         const loadingMessage = document.getElementById('loading-message');
 
-        // Total number of pages
-        const totalPages = 52; // Still assuming 52 pages (from 0 to 51) based on your files
+        // Set totalPages to 2, as you only want to display two images (index 0 and 1)
+        const totalPages = 2; 
 
         /**
          * Dynamically loads and displays PDF pages as images.
-         * This version constructs the image path based on the URL provided:
-         * `/JVportfolio/output-page-XX-Y.png` where XX is zero-padded and Y is the original index.
+         * This version constructs the image path based on the confirmed setup:
+         * `index.html` and image files are in the same `JVportfolio` directory.
+         * The filename format is `output-page-XX-Y.png`.
+         * The loop is limited to display only the first two images.
          */
         function loadPdfPages() {
             let loadedImagesCount = 0;
@@ -56,9 +58,9 @@
                 // Pad the first number of the filename (e.g., 00, 01)
                 const paddedIndex = String(i).padStart(2, '0');
 
-                // Construct the image source path using the full relative path
-                // observed in your hosted URL, and the 'output-page-XX-Y.png' format.
-                const imgSrc = `/JVportfolio/output-page-${paddedIndex}-${i}.png`;
+                // Construct the image source path as a relative path to the current HTML file.
+                // This assumes index.html and the image files are in the SAME directory.
+                const imgSrc = `output-page-${paddedIndex}-${i}.png`;
 
                 // Create a container div for each image for consistent styling
                 const container = document.createElement('div');
