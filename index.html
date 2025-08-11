@@ -1,14 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PDF Viewer Link</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Images Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .image-container {
+      max-width: 800px;
+      width: 100%;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <h1>View PDF Document</h1>
-  <p>
-    <a href="https://1drv.ms/b/c/567e477e26f1a16f/EdRUbLGRKv5JuzDbLYqXZ14BFLBZJ1FF6mPvAz64nCaCzA?e=TLSQbT" target="_blank" rel="noopener noreferrer">
-      Click here to view the PDF online
-    </a>
-  </p>
+  <h1>PDF Pages as Images</h1>
+
+  <div id="images-wrapper">
+    <!-- Images will be injected here by JS -->
+  </div>
+
+  <script>
+    const imagesWrapper = document.getElementById('images-wrapper');
+
+    // There are 52 images, indexed 0 to 51
+    for (let i = 0; i < 52; i++) {
+      // Format number with leading zeros to 2 digits
+      const pageNum = i.toString().padStart(2, '0');
+      const imgSrc = `output-page-${pageNum}-0.png`;
+
+      const container = document.createElement('div');
+      container.className = 'image-container';
+
+      const img = document.createElement('img');
+      img.src = imgSrc;
+      img.alt = `Page ${i + 1}`;
+      img.loading = 'lazy'; // native lazy loading attribute
+
+      container.appendChild(img);
+      imagesWrapper.appendChild(container);
+    }
+  </script>
 </body>
 </html>
+
