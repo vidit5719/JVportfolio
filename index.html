@@ -42,23 +42,23 @@
         const loadingMessage = document.getElementById('loading-message');
 
         // Total number of pages (adjust this if you have more or fewer pages)
-        const totalPages = 52; // Still assuming 52 pages (from 0 to 51)
+        const totalPages = 52; // Assuming 52 pages (from 0 to 51)
 
         /**
          * Dynamically loads and displays PDF pages as images.
-         * The image source path is now constructed using padStart()
-         * to create filenames like 'output-page-00-0.png', 'output-page-01-1.png', etc.
+         * This version uses String(i).padStart(2, '0') to correctly format
+         * the first part of the filename, matching the 'output-page-XX-Y.png' pattern.
          */
         function loadPdfPages() {
             let loadedImagesCount = 0;
 
             for (let i = 0; i < totalPages; i++) {
                 // Manually pad the first number using padStart()
-                const pageNumPadded = String(i).padStart(2, '0');
+                const paddedIndex = String(i).padStart(2, '0');
 
-                // Construct the image source path
-                // This now generates filenames like output-page-00-0.png, output-page-01-1.png, etc.
-                const imgSrc = `output-page-${pageNumPadded}-${i}.png`;
+                // Construct the image source path using the correct format:
+                // output-page-paddedIndex-originalIndex.png (e.g., output-page-00-0.png)
+                const imgSrc = `output-page-${paddedIndex}-${i}.png`;
 
                 // Create a container div for each image for consistent styling
                 const container = document.createElement('div');
