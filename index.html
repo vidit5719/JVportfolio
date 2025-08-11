@@ -1,60 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PDF Pages Viewer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 1rem;
-      background: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .image-container {
-      max-width: 800px;
-      width: 100%;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      background: white;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Pages Viewer</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import for Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Hide scrollbar for a cleaner look, but keep functionality */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
 </head>
-<body>
-  <h1>PDF Pages as Images</h1>
+<body class="bg-gray-100 flex flex-col items-center p-4 min-h-screen">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 mt-4">PDF Pages as Images</h1>
 
-  <div id="images-wrapper"></div>
+    <!-- Loading spinner/message -->
+    <div id="loading-message" class="text-gray-600 text-lg mb-4">
+        Loading pages...
+    </div>
 
-  <script>
-    const imagesWrapper = document.getElementById('images-wrapper');
+    <!-- Container for images -->
+    <div id="images-wrapper" class="w-full max-w-4xl space-y-6">
+        <!-- Images will be dynamically inserted here -->
+    </div>
 
-    for (let i = 0; i < 52; i++) {
-      const pageNum = i.toString().padStart(2, '0'); // zero-padded page number
-      const suffixNum = i.toString();                // suffix matches page number without padding
+    <script>
+        // Get the wrapper element where images will be appended
+        const imagesWrapper = document.getElementById('images-wrapper');
+        // Get the loading message element
+        const loadingMessage = document.getElementById('loading-message');
 
-      const imgSrc = `/JVportfolio/output-page-${pageNum}-${suffixNum}.png`;
+        // Total number of pages (adjust this if you have more or fewer pages)
+        const totalPages = 52; // Based on your previous context, assuming 52 pages (0 to 51)
 
-      const container = document.createElement('div');
-      container.className = 'image-container';
+        /**
+         * Dynamically loads and displays PDF pages as images.
+         * The image source path is constructed based on the
+         * "output-page-%02d-N.png" pattern provided in the file list.
+         */
+        function loadPdfPages() {
+            let loadedImagesCount = 0;
 
-      const img = document.createElement('img');
-      img.src = imgSrc;
-      img.alt = `Page ${i + 1}`;
-      img.loading = 'lazy';
+            for (let i = 0; i < totalPages; i++) {
+                // Ensure pageNum is zero-padded to two digits (e.g., 00, 01, ..., 09, 10)
+                const pageNumZeroPadded = i.toString().padStart(2, '0');
 
-      container.appendChild(img);
-      imagesWrapper.appendChild(container);
-    }
-  </script>
+                // Construct the image source path
+                // The pattern observed from your file list is 'output-page-%02d-N.png'
+                // where %02d seems to be a placeholder that becomes the zero-padded number,
+                // and N is the non-padded number.
+                const imgSrc = `output-page-${pageNumZeroPadded}-${i}.png`;
+
+                // Create a container div for each image for consistent styling
+                const container = document.createElement('div');
+                container.className = 'image-container bg-white rounded-lg shadow-md overflow-hidden';
+
+                // Create the image element
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.alt = `Page ${i + 1}`; // Alt text for accessibility
+                img.loading = 'lazy'; // Use lazy loading for performance on long pages
+                img.className = 'w-full h-auto block rounded-lg transition-transform duration-300 ease-in-out hover:scale-[1.005]'; // Tailwind classes for full width, auto height, block display, and hover effect
+
+                // Add an error handler for images that fail to load
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${imgSrc}`);
+                    // You could also replace the image with a placeholder or display an error message
+                    img.src = `https://placehold.co/800x600/FFF/6B7280?text=Page%20${i+1}%20Not%20Found`; // Placeholder on error
+                    img.alt = `Page ${i + 1} (Image Not Found)`;
+                };
+
+                // Increment loaded count when image loads
+                img.onload = () => {
+                    loadedImagesCount++;
+                    if (loadedImagesCount === totalPages) {
+                        // Hide loading message once all images (or placeholders) have tried to load
+                        loadingMessage.classList.add('hidden');
+                    }
+                };
+
+                // Append the image to its container, and the container to the wrapper
+                container.appendChild(img);
+                imagesWrapper.appendChild(container);
+            }
+            // If there are no images, hide the loading message immediately
+            if (totalPages === 0) {
+                loadingMessage.classList.add('hidden');
+            }
+        }
+
+        // Call the function to load pages when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', loadPdfPages);
+    </script>
 </body>
 </html>
-
